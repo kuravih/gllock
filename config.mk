@@ -1,9 +1,19 @@
-# slock version
-VERSION = 1.0-tip
+# gllock version
+VERSION = 0.1-alpha
 
 # Customize below to fit your system
 
 # paths
+SHADER_LOCATION = /home/kuravih/.gllock
+
+# shader
+# FRGMNT_SHADER = blur.fragment.glsl
+FRGMNT_SHADER = circle.fragment.glsl
+# FRGMNT_SHADER = square.fragment.glsl
+# FRGMNT_SHADER = glitch.fragment.glsl
+# FRGMNT_SHADER = ascii.fragment.glsl
+# FRGMNT_SHADER = crt.fragment.glsl
+
 PREFIX = /usr/local
 
 X11INC = /usr/X11R6/include
@@ -11,11 +21,11 @@ X11LIB = /usr/X11R6/lib
 
 # includes and libs
 INCS = -I. -I/usr/include -I${X11INC}
-LIBS = -L/usr/lib -lc -lcrypt -L${X11LIB} -lX11 -lXext
+LIBS = -L/usr/lib -lc -lcrypt -L${X11LIB} -lX11 -lGL -lGLEW -lpthread
 
 # flags
-CPPFLAGS = -DVERSION=\"${VERSION}\" -DHAVE_SHADOW_H -DCOLOR1=\"black\" -DCOLOR2=\"\#005577\"
-CFLAGS = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
+CPPFLAGS = -DVERSION=\"${VERSION}\" -DHAVE_SHADOW_H -DSHADER_LOCATION=\"${SHADER_LOCATION}\" -DFRGMNT_SHADER=\"${FRGMNT_SHADER}\"
+CFLAGS = -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
 LDFLAGS = -s ${LIBS}
 
 # On *BSD remove -DHAVE_SHADOW_H from CPPFLAGS and add -DHAVE_BSD_AUTH

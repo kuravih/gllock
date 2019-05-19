@@ -1,15 +1,15 @@
-# slock - simple screen locker
+# gllock - simple screen locker
 # See LICENSE file for copyright and license details.
 
 include config.mk
 
-SRC = slock.c
+SRC = gllock.c common.c
 OBJ = ${SRC:.c=.o}
 
-all: options slock
+all: options gllock
 
 options:
-	@echo slock build options:
+	@echo gllock build options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
@@ -20,31 +20,32 @@ options:
 
 ${OBJ}: config.mk
 
-slock: ${OBJ}
+gllock: ${OBJ}
 	@echo CC -o $@
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
 	@echo cleaning
-	@rm -f slock ${OBJ} slock-${VERSION}.tar.gz
+	@rm -f gllock ${OBJ} gllock-${VERSION}.tar.gz
 
 dist: clean
 	@echo creating dist tarball
-	@mkdir -p slock-${VERSION}
-	@cp -R LICENSE Makefile README config.mk ${SRC} slock-${VERSION}
-	@tar -cf slock-${VERSION}.tar slock-${VERSION}
-	@gzip slock-${VERSION}.tar
-	@rm -rf slock-${VERSION}
+	@mkdir -p gllock-${VERSION}
+	@cp -R LICENSE Makefile README config.mk ${SRC} gllock-${VERSION}
+	@tar -cf gllock-${VERSION}.tar gllock-${VERSION}
+	@gzip gllock-${VERSION}.tar
+	@rm -rf gllock-${VERSION}
 
 install: all
 	@echo installing executable file to ${DESTDIR}${PREFIX}/bin
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
-	@cp -f slock ${DESTDIR}${PREFIX}/bin
-	@chmod 755 ${DESTDIR}${PREFIX}/bin/slock
-	@chmod u+s ${DESTDIR}${PREFIX}/bin/slock
+	@cp -f gllock ${DESTDIR}${PREFIX}/bin
+	@chmod 755 ${DESTDIR}${PREFIX}/bin/gllock
+	@chmod u+s ${DESTDIR}${PREFIX}/bin/gllock
+	@ln -sr shaders ${SHADER_LOCATION}
 
 uninstall:
 	@echo removing executable file from ${DESTDIR}${PREFIX}/bin
-	@rm -f ${DESTDIR}${PREFIX}/bin/slock
+	@rm -f ${DESTDIR}${PREFIX}/bin/gllock
 
 .PHONY: all options clean dist install uninstall

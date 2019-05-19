@@ -1,10 +1,10 @@
 #!/bin/sh
 
-DEST=~/bin/slock
+DEST=~/bin/gllock
 
 make
-sudo chown root: slock
-sudo chmod u+s slock
-mv slock $DEST
+sudo chown root: gllock
+sudo chmod u+s gllock
+mv gllock $DEST
 
 
