@@ -2,7 +2,7 @@
 OpenGL extension to the simple screen locker [slock](http://github.com/anekos/slock)
 
 Inspired by this [reddit post](https://www.reddit.com/r/unixporn/comments/3358vu/i3lock_unixpornworthy_lock_screen/) this lock screen was implemented using the simplest lock program I could find.
-**gllock** will obscure the screen using a opengl texture shader.
+**gllock** will obscure the screen using an opengl texture shader.
 
 ## few examples
 
