@@ -56,6 +56,7 @@ Edit `config.mk` to match your local setup (**gllock** is installed into the `/u
 - `FRGMNT_SHADER` -  the shader file to use (default circle.fragment.glsl)
 
 The following command builds and installs **gllock**:
+    
     > sudo make clean install
 
 ## Running gllock
