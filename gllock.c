@@ -28,6 +28,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include <crypt.h>
+
 #include <GL/glew.h>
 #include <GL/glx.h>
 
@@ -149,7 +151,7 @@ readpw(const char* pws)
     {
       buf[0] = 0;
       num = XLookupString(&ev.xkey, buf, sizeof buf, &ksym, 0);
-      
+
       if(IsKeypadKey(ksym))
       {
         if(ksym == XK_KP_Enter)
@@ -286,7 +288,7 @@ animation_runner(void* arg)
 
 
 
-int 
+int
 lockscreen(lock_t* lock) {
   unsigned int len;
   Cursor invisible = 0;
