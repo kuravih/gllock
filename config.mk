@@ -4,7 +4,7 @@ VERSION = 0.1-alpha
 # Customize below to fit your system
 
 # paths
-SHADER_LOCATION = /home/kuravih/.gllock
+SHADER_LOCATION = $(HOME)/.gllock
 
 # shader
 # FRGMNT_SHADER = blur.fragment.glsl
