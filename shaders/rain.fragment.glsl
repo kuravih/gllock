@@ -2,13 +2,16 @@
 #version 330 core
 
 // ---- gllock required fields -----------------------------------------------------------------------------------------
-#define RATE 1.0
+#define RATE 0.5
 
 uniform float time;
 uniform float end;
 uniform sampler2D imageData;
 uniform vec2 screenSize;
 // ---------------------------------------------------------------------------------------------------------------------
+
+#define MIN_AMOUNT 0.0f
+#define MAX_AMOUNT 1.0f //odd value required
 
 // #define CHEAP_NORMALS
 // #define USE_POST_PROCESSING
@@ -107,16 +110,21 @@ vec2 Drops(vec2 uv, float t, float l0, float l1, float l2) {
 void main(void) {
 
   float shaderTime = time*RATE;
-  
+
   vec2 uv = (gl_FragCoord.xy-.5*screenSize) / screenSize.y;
   vec2 UV = vec2(1,-1)*gl_FragCoord.xy/screenSize;
   
-  float rainAmount = .3*sin(shaderTime*.05)+.7;
+  float amountTime = smoothstep(0.0,1.0,(time-end)*RATE);
+  amountTime = (end==0)?amountTime:(1.0-amountTime);
+
+  float amount = mix(MIN_AMOUNT, MAX_AMOUNT, amountTime); //Returns the linear blend of MIN_SIZE and MAX_SIZE
+
+  float rainAmount = amount*(0.3*sin(shaderTime*0.05)+0.7);
   
-  float maxBlur = mix(3., 6., rainAmount);
-  float minBlur = 2.;
+  float maxBlur = mix(3.0, 6.0, rainAmount);
+  float minBlur = 2.0;
     
-  UV = (UV-.5)+.5;
+  UV = (UV-0.5)+0.5;
   
   float staticDrops = smoothstep(-.5, 1., rainAmount)*2.;
   float layer1 = smoothstep(.25, .75, rainAmount);
