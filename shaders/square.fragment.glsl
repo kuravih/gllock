@@ -1,20 +1,20 @@
 // http://www.shadertoy.com/view/MtfXRN
 #version 330 core
 
-#define RATE 0.02f
+// ---- gllock required fields -----------------------------------------------------------------------------------------
+#define RATE 1.0
+
+uniform float time;
+uniform float end;
+uniform sampler2D imageData;
+uniform vec2 screenSize;
+// ---------------------------------------------------------------------------------------------------------------------
+
 #define MIN_SIZE 2.0f
 #define MAX_SIZE 18.0f
 
-uniform float time;
-uniform sampler2D imageData;
-uniform vec2 screenSize;
-
 #define USE_TILE_BORDER
 #define USE_ROUNDED_CORNERS
-
-float ease(float p) {
-  return smoothstep(0.0, RATE, p);
-}
 
 void main(void) {
 
@@ -22,8 +22,10 @@ void main(void) {
   const float textureEdgeOffset = 0.005;
   const float borderSize = 0.75;
 
-  float parameter = ease(clamp(time,0,RATE));
-  float tileSize =  mix(MIN_SIZE, MAX_SIZE, parameter);
+  float shaderTime = smoothstep(0.0,1.0,(time-end)*RATE);
+  shaderTime = (end==0)?shaderTime:(1.0-shaderTime);
+  
+  float tileSize =  mix(MIN_SIZE, MAX_SIZE, shaderTime);
 
   tileSize += mod(tileSize, 2.0);
   vec2 tileNumber = floor(gl_FragCoord.xy / tileSize);

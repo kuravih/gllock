@@ -46,9 +46,9 @@ typedef struct
 {
   int screen;
   Window root, win;
-  GLuint timeID;
   pthread_t tid;
   Bool hold;
+  long attempts;
 } lock_t;
 
 static lock_t* locks;
@@ -174,8 +174,15 @@ readpw(const char* pws)
         running = strcmp(crypt(passwd, pws), pws);
 #endif
 
-        if(running != False)
+        if(running != False) // Wrong password
+        {
           XBell(xdisplay, 100);
+          for(screen = 0; screen < nscreens; screen++)
+          {
+            locks[screen].attempts++;
+          }
+        }
+
         len = 0;
         break;
 
@@ -262,21 +269,14 @@ animation_runner(void* arg)
 
   create_gl_context(xdisplay, lock->win);
 
-  GLuint programID;
-  programID = setup_shaders(xdisplay, lock->root, lock->win, SHADER_LOCATION"/passthrough.vertex.glsl", SHADER_LOCATION"/"FRGMNT_SHADER);
-
-  lock->timeID = glGetUniformLocation(programID, "time");
-
-  animate_in(xdisplay, lock->win, lock->timeID);
+  struct shader_data data;
+  setup_shaders(xdisplay, lock->root, lock->win, &data, SHADER_LOCATION"/passthrough.vertex.glsl", SHADER_LOCATION"/"FRGMNT_SHADER);
 
   XUnlockDisplay(xdisplay);
 
-  animate_cts(xdisplay, lock->win, &(lock->hold), lock->timeID);
-
-  animate_out(xdisplay, lock->win, lock->timeID);
+  animate(xdisplay, lock->win, &(lock->hold), &(lock->attempts), &data);
 
   return NULL;
-
 }
 
 
@@ -294,6 +294,7 @@ lockscreen(lock_t* lock) {
   Cursor invisible = 0;
 
   lock->hold = True;
+  lock->attempts = 0;
 
   XLockDisplay(xdisplay);
 

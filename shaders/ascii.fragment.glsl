@@ -1,9 +1,17 @@
 // http://www.shadertoy.com/view/lssGDj
 #version 330 core
 
+// ---- gllock required fields -----------------------------------------------------------------------------------------
+#define RATE 1.0
+
 uniform float time;
+uniform float end;
 uniform sampler2D imageData;
 uniform vec2 screenSize;
+// ---------------------------------------------------------------------------------------------------------------------
+
+#define MIN_SIZE 0.0f
+#define MAX_SIZE 16.0f
 
 float character(int n, vec2 p)
 {
@@ -21,8 +29,13 @@ float character(int n, vec2 p)
 
 void main(void) {
 
+  float shaderTime = smoothstep(0.0,1.0,(time-end)*RATE);
+  shaderTime = (end==0)?shaderTime:(1.0-shaderTime);
+
+  float radius = mix(MIN_SIZE, MAX_SIZE, shaderTime); //Returns the linear blend of MIN_SIZE and MAX_SIZE
+
   vec2 pix =  vec2(1,-1)*gl_FragCoord.xy;
-  vec3 col = texture(imageData, floor(pix/8.0)*8.0/screenSize.xy).rgb;	
+  vec3 col = texture(imageData, floor(pix/radius)*radius/screenSize.xy).rgb;	
   
   float gray = 0.3 * col.r + 0.59 * col.g + 0.11 * col.b;
   
@@ -35,9 +48,10 @@ void main(void) {
   if (gray > 0.7) n = 13199452; // @
   if (gray > 0.8) n = 11512810; // #
   
-  vec2 p = mod(pix/4.0, 2.0) - vec2(1.0);
+  vec2 p = mod(2*pix/radius, 2.0) - vec2(1.0);
     
   col = col*character(n, p);
   
   gl_FragColor = vec4(col, 1.0);
 }
+//

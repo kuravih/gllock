@@ -1,13 +1,17 @@
 // http://www.shadertoy.com/view/4dsXWs
 #version 330 core
 
-#define RATE 0.02f
-#define MIN_SIZE 2.0f
-#define MAX_SIZE 18.0f
+// ---- gllock required fields -----------------------------------------------------------------------------------------
+#define RATE 1.0
 
 uniform float time;
+uniform float end;
 uniform sampler2D imageData;
 uniform vec2 screenSize;
+// ---------------------------------------------------------------------------------------------------------------------
+
+#define MIN_SIZE 2.0f
+#define MAX_SIZE 18.0f
 
 // Compute the relative distance to the circle, where < 0.0 is outside the feathered border, and > 1.0 is inside the feathered border.
 float ComputeCircle(vec2 pos, vec2 center, float radius, float feather) {
@@ -20,15 +24,13 @@ float ComputeCircle(vec2 pos, vec2 center, float radius, float feather) {
   return smoothstep(start, end, dist);
 }
 
-float ease(float p) {
-  return smoothstep(0.0, RATE, p);
-}
-
 // The main function, which is executed once per pixel.
 void main(void) {
 
-  float parameter = ease(clamp(time,0,RATE));
-  float diameter = mix(MIN_SIZE, MAX_SIZE, parameter);
+  float shaderTime = smoothstep(0.0,1.0,(time-end)*RATE);
+  shaderTime = (end==0)?shaderTime:(1.0-shaderTime);
+
+  float diameter = mix(MIN_SIZE, MAX_SIZE, shaderTime); //Returns the linear blend of MIN_SIZE and MAX_SIZE
 
   float radius = diameter / 2.0;
   vec2  center = vec2(0.0);
@@ -61,3 +63,4 @@ void main(void) {
   // Set the final fragment color.
   gl_FragColor = vec4(col, 1.0);
 }
+//
