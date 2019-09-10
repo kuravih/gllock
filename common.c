@@ -513,10 +513,10 @@ animate(Display* xdisplay, Window win, Bool* condition, long* attempts, struct s
   {
     time_s=elapsed_time_s(start_time);
     glUniform1f(data->timeID, time_s);
+    glXSwapBuffers(xdisplay, win);
     glEnableVertexAttribArray(0);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glDisableVertexAttribArray(0);
-    glXSwapBuffers(xdisplay, win);
     if ( (end_s>0) && ((time_s-end_s)*data->rate>=1.0) ) { // unlock fade out
       break;
     }
