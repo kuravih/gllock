@@ -47,5 +47,7 @@ install: all
 uninstall:
 	@echo removing executable file from ${DESTDIR}${PREFIX}/bin
 	@rm -f ${DESTDIR}${PREFIX}/bin/gllock
+	@echo removing shader link from ${SHADER_LOCATION}
+	@rm -f ${SHADER_LOCATION}/shaders
 
 .PHONY: all options clean dist install uninstall
