@@ -42,8 +42,7 @@ install: all
 	@cp -f gllock ${DESTDIR}${PREFIX}/bin
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/gllock
 	@chmod u+s ${DESTDIR}${PREFIX}/bin/gllock
-	@ln -sr shaders ${SHADER_LOCATION}
-
+	@install -Dt ${DESTDIR}${SHADER_LOCATION} shaders/* 
 uninstall:
 	@echo removing executable file from ${DESTDIR}${PREFIX}/bin
 	@rm -f ${DESTDIR}${PREFIX}/bin/gllock
